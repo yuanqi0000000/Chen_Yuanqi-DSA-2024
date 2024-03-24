@@ -2,8 +2,6 @@ package oy.tol.tra;
 
 public class KeyValueBSearchTree<K extends Comparable<K>, V> implements Dictionary<K, V> {
 
-
-
     private TreeNode<K, V> root;
     private int count = 0;
     private int maxTreeDepth = 0;
@@ -18,7 +16,6 @@ public class KeyValueBSearchTree<K extends Comparable<K>, V> implements Dictiona
         return this.count;
     }
 
-
     @Override
     public String getStatus() {
         String toReturn = "Tree has max depth of " + maxTreeDepth + ".\n";
@@ -31,29 +28,27 @@ public class KeyValueBSearchTree<K extends Comparable<K>, V> implements Dictiona
         return toReturn;
     }
 
-
     @Override
     public boolean add(K key, V value) throws IllegalArgumentException, OutOfMemoryError {
 
         if (null == key || value == null) {
             throw new IllegalArgumentException("Key or Value cannot be null");
-        }
-        else if (null == this.root) {
-            this.root = new TreeNode<K,V>(key,value);
+        } else if (null == this.root) {
+            this.root = new TreeNode<K, V>(key, value);
             count++;
             return true;
-        }
-        else{
-            int add = this.root.insert(key,value,key.hashCode());
+        } else {
+            int add = this.root.insert(key, value, key.hashCode());
             count += add;
             return true;
         }
-        
+
     }
 
     @Override
     public V find(K key) throws IllegalArgumentException {
-        if (null == key) throw new IllegalArgumentException("Key to find cannot be null");
+        if (null == key)
+            throw new IllegalArgumentException("Key to find cannot be null");
         V value = this.root.find(key, key.hashCode());
         return value;
     }

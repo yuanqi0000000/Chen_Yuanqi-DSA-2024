@@ -8,7 +8,7 @@ public class Person implements Comparable<Person> {
         this.firstName = new String(person.firstName);
         this.lastName = new String(person.lastName);
     }
-    
+
     public Person(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -33,8 +33,6 @@ public class Person implements Comparable<Person> {
 
     @Override
     public int hashCode() {
-        // int hash = 5381;
-        // Implement hash function here.
         int hash = getFullName().hashCode();
         return hash;
     }
@@ -42,11 +40,10 @@ public class Person implements Comparable<Person> {
     @Override
     public boolean equals(Object other) {
         if (other instanceof Person) {
-            return this.getFullName().equals(((Person)other).getFullName());
+            return this.getFullName().equals(((Person) other).getFullName());
         }
         return false;
     }
-
 
     @Override
     public int compareTo(Person other) {
