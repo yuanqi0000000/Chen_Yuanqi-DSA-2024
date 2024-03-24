@@ -2,7 +2,7 @@ package oy.tol.tra;
 
 public class KeyValueHashTable<K extends Comparable<K>, V> implements Dictionary<K, V> {
 
-    // This should implement a hash table.
+
 
     private Pair<K, V>[] values = null;
     private int count = 0;
@@ -22,7 +22,7 @@ public class KeyValueHashTable<K extends Comparable<K>, V> implements Dictionary
 
     @Override
     public Type getType() {
-        return Type.NONE;
+        return Type.HASHTABLE;
     }
 
     @SuppressWarnings("unchecked")
@@ -31,7 +31,6 @@ public class KeyValueHashTable<K extends Comparable<K>, V> implements Dictionary
         if (capacity < DEFAULT_CAPACITY) {
             capacity = DEFAULT_CAPACITY;
         }
-        // Assuming capacity means the count of elements to add, so multiplying by fill factor.
         values = (Pair<K, V>[]) new Pair[(int) ((double) capacity * (1.0 + LOAD_FACTOR))];
         reallocationCount = 0;
         count = 0;
@@ -41,21 +40,10 @@ public class KeyValueHashTable<K extends Comparable<K>, V> implements Dictionary
 
     @Override
     public int size() {
-        // TODO: Implement this.
-        return 0;
+        return this.count;
     }
 
-    /**
-     * Prints out the statistics of the hash table.
-     * Here you should print out member variable information which tell something
-     * about your implementation.
-     * <p>
-     * For example, if you implement this using a hash table, update member
-     * variables of the class (int counters) in add() whenever a collision
-     * happen. Then print this counter value here.
-     * You will then see if you have too many collisions. It will tell you that your
-     * hash function is not good.
-     */
+
     @Override
     public String getStatus() {
         StringBuilder builder = new StringBuilder();
@@ -70,28 +58,40 @@ public class KeyValueHashTable<K extends Comparable<K>, V> implements Dictionary
 
     @Override
     public boolean add(K key, V value) throws IllegalArgumentException, OutOfMemoryError {
-        // TODO: Implement this.
-        // Remeber to check for null values.
 
-        // Checks if the LOAD_FACTOR has been exceeded --> if so, reallocates to a bigger hashtable.
+        if (null == key || value == null) throw new IllegalArgumentException("Key or Value cannot be null");
         if (((double)count * (1.0 + LOAD_FACTOR)) >= values.length) {
             reallocate((int)((double)(values.length) * (1.0 / LOAD_FACTOR)));
         }
-        // Remember to get the hash key from the Person,
-        // hash table computes the index for the Person (based on the hash value),
-        // if index was taken by different Person (collision), get new hash and index,
-        // insert into table when the index has a null in it,
-        // return true if existing Person updated or new Person inserted.
+
+        // hash(key) = (hash(key) + MAX_INT) % MAX_INT 另一种哈希值的计算
+        int i;
+        int steps = 1;
+        for( i = (key.hashCode() & 0x7fffffff) % values.length; values[i] != null; i = (i +1 ) % values.length ,steps++){
+            if(values[i].getKey().equals(key)){ 
+                values[i].setValue(value);
+                return true;
+            }
+        }
+        if(i != (key.hashCode() & 0x7fffffff) % values.length) collisionCount++;
+        if(steps > maxProbingSteps) maxProbingSteps = steps;
+        values[i] = new Pair<K,V>(key, value);
+        count++;
+
+
         
-        return false;
+        return true;
     }
 
     @Override
     public V find(K key) throws IllegalArgumentException {
-        // Remember to check for null.
-
-        // Must use same method for computing index as add method
-        
+        if (null == key) throw new IllegalArgumentException("Key to find cannot be null");
+        int i;
+        for( i = (key.hashCode() & 0x7fffffff)% values.length; values[i] != null; i = (i +1 ) % values.length){
+            if(values[i].getKey().equals(key)){ 
+                return values[i].getValue();
+            }
+        }
         return null;
     }
 
