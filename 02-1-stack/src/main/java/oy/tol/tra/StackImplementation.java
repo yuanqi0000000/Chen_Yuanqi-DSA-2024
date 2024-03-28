@@ -79,7 +79,9 @@ public class StackImplementation<E> implements StackInterface<E> {
 
    @Override
    public void clear() {
-      this.itemArray = (E[]) new Object[capacity];
+      for(int i= 0; i<=currentIndex; i++){
+         itemArray[i] = null;
+      }
       this.currentIndex = -1;
    }
 
