@@ -51,7 +51,7 @@ public class ParenthesisChecker {
       // TODO:
       // for each character in the input string
       //   if character is an opening parenthesis -- one of "([{"
-      //      push it into the stack (check for failure and throw an exception if so)
+      //      push it into the stack (check for failure and throw an exception if so)  这个怎么检查
       //   else if character is a closing parenthesis -- one of ")]}"
       //      pop the latest opening parenthesis from the stack
       //      if the popped item is null
@@ -61,5 +61,33 @@ public class ParenthesisChecker {
       //         throw an exception, wrong kind of parenthesis were in the text (e.g. "asfa ( asdf } sadf")
       // if the stack is not empty after all the characters have been handled
       //   throw an exception since the string has more opening than closing parentheses.
+      stack.push('a');
+      int num = 0;
+      for(int i=0;i< fromString.length(); i++ ){
+         char c = fromString.charAt(i);
+         if('('==c || '[' == c ||'{' == c){
+            stack.push(c);
+            num++;
+         }else if(')'==c ||']'==c||'}'==c){
+            num++;
+            char comp = ' ';
+            comp = stack.pop();
+            //栈为空时comp的值是什么，是a吗
+            if('a' == comp ){
+               throw new ParenthesesException("There are too many closing parentheses", -1);
+            }
+            else if((')'==c && '(' != comp) || (']'==c && '[' != comp) || ('}'==c && '{' != comp)){
+               throw new ParenthesesException("Wrong kind of parenthesis were in the text", -3);
+            }
+            
+         }
+
+      }
+      stack.pop();
+      if(!stack.isEmpty()){
+         throw new ParenthesesException("The string has more opening than closing parentheses", -2);
+      }
+
+      return num;
    }
 }
